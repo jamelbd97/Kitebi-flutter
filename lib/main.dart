@@ -6,9 +6,6 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-
-    /// Providers are above [Root App] instead of inside it, so that tests
-    /// can use [Root App] while mocking the providers
     MultiProvider(
       providers: [
         Provider<GlobalTheme>(
@@ -26,12 +23,11 @@ class KitebiMainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.white,
+        systemNavigationBarColor: customLight,
         systemNavigationBarIconBrightness: Brightness.dark));
 
-    final ThemeData globalTheme = Provider
-        .of<GlobalTheme>(context)
-        .globalTheme;
+    final ThemeData globalTheme = Provider.of<GlobalTheme>(context).globalTheme;
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,

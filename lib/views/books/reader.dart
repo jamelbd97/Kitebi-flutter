@@ -2,25 +2,29 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:kitebi/constants.dart';
 import 'package:kitebi/global_theme.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class BookDetails extends StatefulWidget {
+class BookReader extends StatefulWidget {
   final String _id;
   final String _title;
-  final String _artist;
-  final String _cover;
+  final String _author;
+  final DateTime _releaseDate;
+  final String _coverId;
+  final String _pdfId;
 
-  const BookDetails(this._id, this._title, this._artist, this._cover);
+  const BookReader(this._id, this._title, this._author, this._releaseDate,
+      this._coverId, this._pdfId);
 
   @override
-  _BookDetailsState createState() => _BookDetailsState();
+  _BookReaderState createState() => _BookReaderState();
 }
 
-class _BookDetailsState extends State<BookDetails> {
+class _BookReaderState extends State<BookReader> {
   File? _file;
   var _fileIsReady = false;
   var _progressValue = 0.0;
@@ -64,8 +68,7 @@ class _BookDetailsState extends State<BookDetails> {
           downloaded += chunk.length;
         }, onDone: () async {
           // Display percentage of completion
-          debugPrint(
-              'downloadPercentage: ${downloaded / r.contentLength!}');
+          debugPrint('downloadPercentage: ${downloaded / r.contentLength!}');
 
           // Save the file
           File file = File(localPath);
@@ -109,16 +112,14 @@ class _BookDetailsState extends State<BookDetails> {
   @override
   void initState() {
     super.initState();
-    _saveFileFromNetwork(
-        'https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf');
+    _saveFileFromNetwork(Constants.bookDataUrl + widget._pdfId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Syncfusion Flutter PDF Viewer',
-            style: TextStyle(fontSize: 25)),
+        title: Text(widget._title, style: const TextStyle(fontSize: 25)),
         actions: <Widget>[
           IconButton(
             icon: const Icon(

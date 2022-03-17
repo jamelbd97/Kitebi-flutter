@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:kitebi/constants.dart';
 import 'package:kitebi/global_theme.dart';
 import 'package:kitebi/models/audiobook.dart';
-import 'package:kitebi/views/audiobooks/list_single.dart';
+import 'package:kitebi/views/audiobooks/list_model.dart';
 
 class AudioBookList extends StatefulWidget {
   const AudioBookList({Key? key}) : super(key: key);
@@ -30,9 +30,11 @@ class _AudioBookListState extends State<AudioBookList> {
       _audiobooks.add(Audiobook(
           audiobooksFromServer[i]["_id"],
           audiobooksFromServer[i]["title"],
-          audiobooksFromServer[i]["artist"],
+          audiobooksFromServer[i]["author"],
+          DateTime.parse(audiobooksFromServer[i]["releaseDate"]),
           audiobooksFromServer[i]["coverId"],
-          audiobooksFromServer[i]["audioId"]));
+          audiobooksFromServer[i]["audioId"]
+      ));
     }
 
     return true;
@@ -114,10 +116,11 @@ class _AudioBookListState extends State<AudioBookList> {
                     itemBuilder: (BuildContext ctx, index) {
                       return Container(
                         alignment: Alignment.center,
-                        child: SingleAudiobookItem(
+                        child: AudiobookListModel(
                             _audiobooks[index].id,
                             _audiobooks[index].title,
-                            _audiobooks[index].artist,
+                            _audiobooks[index].author,
+                            _audiobooks[index].releaseDate,
                             _audiobooks[index].coverId,
                             _audiobooks[index].audioId),
                       );

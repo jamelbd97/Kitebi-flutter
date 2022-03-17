@@ -1,34 +1,31 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:kitebi/constants.dart';
 import 'package:kitebi/global_theme.dart';
 
-class SingleAudiobookItem extends StatefulWidget {
+class AudiobookListModel extends StatefulWidget {
   final String _id;
   final String _title;
-  final String _artist;
-  final String _cover;
-  final String _audio;
+  final String _author;
+  final DateTime _releaseDate;
+  final String _coverId;
+  final String _audioId;
 
-  const SingleAudiobookItem(
-      this._id, this._title, this._artist, this._cover, this._audio);
+  const AudiobookListModel(this._id, this._title, this._author,
+      this._releaseDate, this._coverId, this._audioId);
 
   @override
-  _SingleAudiobookItemState createState() => _SingleAudiobookItemState();
+  _AudiobookListModelState createState() => _AudiobookListModelState();
 }
 
-class _SingleAudiobookItemState extends State<SingleAudiobookItem> {
+class _AudiobookListModelState extends State<AudiobookListModel> {
   IconData _playButtonIcon = Icons.play_circle;
   bool _isPlaying = false;
   AudioPlayer player = AudioPlayer();
 
   Future play() async {
     int result =
-        await player.play(Constants.audiobookCoversUrl + widget._audio);
+        await player.play(Constants.audiobookDataUrl + widget._audioId);
 
     if (result != 1) {
       ScaffoldMessenger.of(context)
@@ -65,7 +62,7 @@ class _SingleAudiobookItemState extends State<SingleAudiobookItem> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage(
-                        Constants.audiobookCoversUrl + widget._cover),
+                        Constants.audiobookDataUrl + widget._coverId),
                     fit: BoxFit.cover),
               ),
               child: Container(
@@ -75,16 +72,19 @@ class _SingleAudiobookItemState extends State<SingleAudiobookItem> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Chip(
-                          label: Text("New",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              )),
-                          shape: StadiumBorder(
-                              side: BorderSide(color: customPurple2)),
-                          backgroundColor: customPurple4,
-                          padding: EdgeInsets.all(0),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 6),
+                          child: Chip(
+                            padding: EdgeInsets.all(0),
+                            backgroundColor: customPurple4,
+                            label: Text("New",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                )),
+                            shape: StadiumBorder(
+                                side: BorderSide(color: customPurple2)),
+                          ),
                         ),
                         IconButton(
                             alignment: Alignment.topRight,
@@ -129,7 +129,7 @@ class _SingleAudiobookItemState extends State<SingleAudiobookItem> {
                             fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                       Text(
-                        widget._artist,
+                        widget._author,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             fontWeight: FontWeight.normal, fontSize: 14),

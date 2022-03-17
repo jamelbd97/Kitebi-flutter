@@ -6,7 +6,7 @@ import 'package:kitebi/constants.dart';
 import 'package:kitebi/global_theme.dart';
 import 'package:kitebi/models/book.dart';
 
-import 'list_single.dart';
+import 'list_model.dart';
 
 class BookList extends StatefulWidget {
   const BookList({Key? key}) : super(key: key);
@@ -22,13 +22,20 @@ class _BookListState extends State<BookList> {
 
   Future<bool> fetchData() async {
     http.Response response =
-        await http.get(Uri.parse(Constants.serverUrl + "book/all"));
+    await http.get(Uri.parse(Constants.serverUrl + "book/all"));
 
     List<dynamic> booksFromServer = json.decode(response.body)["books"];
+
     for (var i = 0; i < booksFromServer.length; i++) {
-      _books.add(Book(booksFromServer[i]["_id"], booksFromServer[i]["title"],
-          booksFromServer[i]["artist"], booksFromServer[i]["coverId"]));
+      _books.add(Book(
+          booksFromServer[i]["_id"],
+          booksFromServer[i]["title"],
+          booksFromServer[i]["author"],
+          DateTime.parse(booksFromServer[i]["releaseDate"]),
+          booksFromServer[i]["coverId"],
+          booksFromServer[i]["pdfId"]));
     }
+
 
     return true;
   }
@@ -42,9 +49,7 @@ class _BookListState extends State<BookList> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async {
-
-      },
+      onRefresh: () async {},
       child: ListView(
         children: [
           Column(
@@ -58,7 +63,8 @@ class _BookListState extends State<BookList> {
                       padding: EdgeInsets.all(8.0),
                       child: Chip(
                         backgroundColor: Colors.white,
-                        shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+                        shape: StadiumBorder(
+                            side: BorderSide(color: Colors.black12)),
                         label: Text(
                           'Genres',
                           style: TextStyle(color: customDark, fontSize: 18),
@@ -69,7 +75,8 @@ class _BookListState extends State<BookList> {
                       padding: EdgeInsets.all(8.0),
                       child: Chip(
                         backgroundColor: Colors.white,
-                        shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+                        shape: StadiumBorder(
+                            side: BorderSide(color: Colors.black12)),
                         label: Text(
                           'Top selling',
                           style: TextStyle(color: customDark, fontSize: 18),
@@ -80,7 +87,8 @@ class _BookListState extends State<BookList> {
                       padding: EdgeInsets.all(8.0),
                       child: Chip(
                         backgroundColor: Colors.white,
-                        shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+                        shape: StadiumBorder(
+                            side: BorderSide(color: Colors.black12)),
                         label: Text(
                           'New releases',
                           style: TextStyle(color: customDark, fontSize: 18),
@@ -91,7 +99,8 @@ class _BookListState extends State<BookList> {
                       padding: EdgeInsets.all(8.0),
                       child: Chip(
                         backgroundColor: Colors.white,
-                        shape: StadiumBorder(side: BorderSide(color: Colors.black12)),
+                        shape: StadiumBorder(
+                            side: BorderSide(color: Colors.black12)),
                         label: Text(
                           'Top grossing',
                           style: TextStyle(color: customDark, fontSize: 18),
@@ -144,11 +153,13 @@ class _BookListState extends State<BookList> {
                               return Container(
                                 padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                                 alignment: Alignment.center,
-                                child: SingleBookItem(
+                                child: BookListModel(
                                     _books[index].id,
                                     _books[index].title,
-                                    _books[index].artist,
-                                    _books[index].coverId),
+                                    _books[index].author,
+                                    _books[index].releaseDate,
+                                    _books[index].coverId,
+                                    _books[index].pdfId),
                               );
                             });
                       } else {
@@ -188,19 +199,22 @@ class _BookListState extends State<BookList> {
                     future: fetchedData,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
+                        var _booksInverted = _books.reversed.toList();
                         return ListView.builder(
                             padding: const EdgeInsets.all(5),
                             scrollDirection: Axis.horizontal,
-                            itemCount: _books.length,
+                            itemCount: _booksInverted.length,
                             itemBuilder: (BuildContext ctx, index) {
                               return Container(
                                 padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                                 alignment: Alignment.center,
-                                child: SingleBookItem(
-                                    _books[index].id,
-                                    _books[index].title,
-                                    _books[index].artist,
-                                    _books[index].coverId),
+                                child: BookListModel(
+                                    _booksInverted[index].id,
+                                    _booksInverted[index].title,
+                                    _booksInverted[index].author,
+                                    _booksInverted[index].releaseDate,
+                                    _booksInverted[index].coverId,
+                                    _booksInverted[index].pdfId),
                               );
                             });
                       } else {

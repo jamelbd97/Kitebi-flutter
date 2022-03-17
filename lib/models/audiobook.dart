@@ -1,9 +1,11 @@
 class Audiobook {
   final String id;
   final String title;
-  final String artist;
+  final String author;
+  final DateTime releaseDate;
   final String coverId;
   final String audioId;
 
-  Audiobook(this.id, this.title, this.artist, this.coverId, this.audioId);
+  Audiobook(this.id, this.title, this.author, this.releaseDate, this.coverId,
+      this.audioId);
 }
