@@ -22,17 +22,19 @@ class KitebiMainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        systemNavigationBarColor: customLight,
-        systemNavigationBarIconBrightness: Brightness.dark));
-
     final ThemeData globalTheme = Provider.of<GlobalTheme>(context).globalTheme;
 
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Kitebi',
-        theme: globalTheme,
-        home: const Home());
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.white,
+          systemNavigationBarColor: customLight,
+          systemNavigationBarIconBrightness: Brightness.dark),
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Kitebi',
+          themeMode: ThemeMode.light,
+          theme: globalTheme,
+          home: const Home()),
+    );
   }
 }
