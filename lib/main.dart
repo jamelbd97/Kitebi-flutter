@@ -22,6 +22,11 @@ class KitebiMainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        systemNavigationBarColor: customLight,
+        systemNavigationBarIconBrightness: Brightness.dark));
+
     final ThemeData globalTheme = Provider.of<GlobalTheme>(context).globalTheme;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
